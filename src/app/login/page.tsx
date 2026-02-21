@@ -14,12 +14,10 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { POST } from "../api/auth/register/route";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +27,32 @@ export default function SignIn() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    // sign-in logic
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        setError(data?.error || "Login failed");
+        return;
+      }
+
+      // backend returns { user, message } — store user in localStorage
+      if (data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
+      router.push("/");
+    } catch (err: any) {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -63,11 +86,9 @@ export default function SignIn() {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-gray-300 font-medium">
-                  Password
-                </Label>
-              </div>
+              <Label htmlFor="password" className="text-gray-300 font-medium">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -80,6 +101,11 @@ export default function SignIn() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4 pt-2">
+            {error && (
+              <p className="text-sm text-red-400 text-center" role="alert">
+                {error}
+              </p>
+            )}
             <Button
               className="w-full h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold shadow-lg shadow-purple-500/20 transition-all hover:-translate-y-0.5"
               type="submit"
