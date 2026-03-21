@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateRoom() {
   const [hostId, setHostId] = useState("");
   const [result, setResult] = useState("");
+  const router = useRouter();
 
   async function onCreate() {
     setResult("");
@@ -15,6 +17,10 @@ export default function CreateRoom() {
     });
     const data = (await res.json()) as { shareableLink?: string; error?: string };
     setResult(data.shareableLink ?? data.error ?? "Done");
+    if (data.shareableLink) {
+      const code = data.shareableLink.split("/contest/")[1];
+      if (code) router.push(`/contest/${code}`);
+    }
   }
 
   return (

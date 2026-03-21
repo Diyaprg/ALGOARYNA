@@ -8,6 +8,5 @@ interface PageProps {
 
 export default async function ContestPlay({ params }: PageProps) {
   const { roomCode } = await params;
-
   return <PlayClient roomCode={roomCode} />;
 }

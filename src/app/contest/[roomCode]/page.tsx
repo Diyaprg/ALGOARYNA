@@ -6,7 +6,6 @@ import { useRoomSocket } from "@/hooks/useSocket";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, Wifi, WifiOff, Crown, Users } from "lucide-react";
 
-
 interface Participant {
   id: string;
   email: string;
@@ -149,12 +148,6 @@ export default function ContestPage() {
               {isConnected ? <Wifi size={14} /> : <WifiOff size={14} />}
               {isConnected ? "Connected" : "Disconnected"}
             </div>
-
-            {isHost && room.status === "waiting" && (
-              <Button className="bg-[#7c5cff] hover:bg-[#6a4ce0] text-white rounded-lg text-xs h-8 px-4">
-                Start Contest
-              </Button>
-            )}
           </div>
         </div>
       </div>
@@ -185,7 +178,7 @@ export default function ContestPage() {
                         : "border-white/5 bg-white/5"
                     }`}
                   >
-                    <div className="w-9 h-9 bg-[#7c5cff]/20 border border-[#7c5cff]/30 rounded-full flex items-center justify-center text-[#7c5cff] font-bold text-sm flex-shrink-0">
+                    <div className="w-9 h-9 bg-[#7c5cff]/20 border border-[#7c5cff]/30 rounded-full flex items-center justify-center text-[#7c5cff] font-bold text-sm shrink-0">
                       {(p.name?.[0] ?? p.email[0]).toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -226,7 +219,7 @@ export default function ContestPage() {
               <Button
                 onClick={copyCode}
                 size="sm"
-                className="bg-[#7c5cff] hover:bg-[#6a4ce0] text-white rounded-lg h-9 w-9 p-0 flex-shrink-0"
+                className="bg-[#7c5cff] hover:bg-[#6a4ce0] text-white rounded-lg h-9 w-9 p-0 shrink-0"
                 title="Copy room code"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -257,10 +250,11 @@ export default function ContestPage() {
                     : "The contest will begin once the host starts it. Hang tight!"}
                 </p>
                 {isHost && (
-                  <Button className="mt-6 bg-[#7c5cff] hover:bg-[#6a4ce0] text-white rounded-xl px-8 h-12 font-bold"
-                  onClick={() => router.push(`/contest/${roomCode}/play`)}
+                  <Button
+                    className="mt-6 bg-[#7c5cff] hover:bg-[#6a4ce0] text-white rounded-xl px-8 h-12 font-bold"
+                    onClick={() => router.push(`/contest/${roomCode}/select`)}
                   >
-                    Start Contest
+                    Select Question
                   </Button>
                 )}
               </>

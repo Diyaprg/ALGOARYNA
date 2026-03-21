@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function JoinRoom() {
   const [roomCode, setRoomCode] = useState("");
   const [userId, setUserId] = useState("");
   const [result, setResult] = useState("");
+  const router = useRouter();
 
   async function onJoin() {
     setResult("");
@@ -16,6 +18,9 @@ export default function JoinRoom() {
     });
     const data = (await res.json()) as { success?: boolean; error?: string };
     setResult(data.success ? "Joined room" : data.error ?? "Failed");
+    if (data.success) {
+      router.push(`/contest/${roomCode.trim().toUpperCase()}`);
+    }
   }
 
   return (
